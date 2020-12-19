@@ -127,6 +127,20 @@ declare function sub<T = i32 | i64 | f32 | f64>(left: T, right: T): T;
 declare function mul<T = i32 | i64 | f32 | f64>(left: T, right: T): T;
 /** Computes the quotient of two integers or floats. */
 declare function div<T = i32 | i64 | f32 | f64>(left: T, right: T): T;
+/** Computes the remainder from the division of two integers. */
+declare function rem<T = i32 | i64>(left: T, right: T): T;
+/** Performs the AND bitwise opation of the first integer on the second integer. */
+declare function and<T = i32 | i64>(left: T, right: T): T;
+/** Performs the OR bitwise opation of the first integer on the second integer. */
+declare function or<T = i32 | i64>(left: T, right: T): T;
+/** Performs the XOR bitwise opation of the first integer on the second integer. */
+declare function xor<T = i32 | i64>(left: T, right: T): T;
+/** Shifts the bits of the first integer left by the second integer. */
+declare function shl<T = i32 | i64>(left: T, right: T): T;
+/** Shifts the bits of the first integer right by the second integer. */
+declare function shr<T = i32 | i64>(left: T, right: T): T;
+/** Returns true if the integer is equal to zero. */
+declare function eqz<T = i32 | i64>(value: T): bool;
 /** Loads a value of the specified type from memory. Equivalent to dereferncing a pointer in other languages. */
 declare function load<T>(ptr: usize, immOffset?: usize, immAlign?: usize): T;
 /** Stores a value of the specified type to memory. Equivalent to dereferencing a pointer in other languages when assigning a value. */
@@ -306,6 +320,23 @@ declare namespace i32 {
   export function div_s(left: i32, right: i32): i32;
   /** Computes the unsigned quotient of two 32-bit integers. */
   export function div_u(left: i32, right: i32): i32;
+  /** Computes the remainder from the division of two 32-bit unsigned integers. */
+  export function rem_s(left: i32, right: i32): i32;
+  /** Computes the remainder from the division of two 32-bit signed integers. */
+  export function rem_u(left: i32, right: i32): i32;
+  /** Performs the AND bitwise opation of the first 32-bit integer on the second 32-bit integer. */
+  export function and(left: i32, right: i32): i32;
+  /** Performs the OR bitwise opation of the first 32-bit integer on the second 32-bit integer. */
+  export function or(left: i32, right: i32): i32;
+  /** Performs the XOR bitwise opation of the first 32-bit integer on the second 32-bit integer. */
+  export function xor(left: i32, right: i32): i32;
+  /** Shifts the bits of the first 32-bit integer left by the second 32-bit integer. */
+  export function shl(left: i32, right: i32): i32;
+  /** Shifts the bits of the first 32-bit signed integer right by the second 32-bit signed integer. */
+  export function shr_s(left: i32, right: i32): i32;
+  /** Shifts the bits of the first 32-bit unsigned integer right by the second 32-bit unsigned integer. */
+  export function shr_u(left: i32, right: i32): i32;
+
   /** Atomic 32-bit integer operations. */
   export namespace atomic {
     /** Atomically loads an 8-bit unsigned integer value from memory and returns it as a 32-bit integer. */
@@ -426,6 +457,24 @@ declare namespace i64 {
   export function div_s(left: i64, right: i64): i64;
   /** Computes the unsigned quotient of two 64-bit integers. */
   export function div_u(left: i64, right: i64): i64;
+  /** Computes the remainder from the division of two 64-bit unsigned integers. */
+  export function rem_s(left: i64, right: i64): i64;
+  /** Computes the remainder from the division of two 64-bit signed integers. */
+  export function rem_u(left: i64, right: i64): i64;
+  /** Performs the AND bitwise opation of the first 64-bit integer on the second 64-bit integer. */
+  export function and(left: i64, right: i64): i64;
+  /** Performs the OR bitwise opation of the first 64-bit integer on the second 64-bit integer. */
+  export function or(left: i64, right: i64): i64;
+  /** Performs the XOR bitwise opation of the first 64-bit integer on the second 64-bit integer. */
+  export function xor(left: i64, right: i64): i64;
+  /** Shifts the bits of the first 64-bit integer left by the second 64-bit integer. */
+  export function shl(left: i64, right: i64): i64;
+  /** Shifts the bits of the first 64-bit signed integer right by the second 64-bit signed integer. */
+  export function shr_s(left: i64, right: i64): i64;
+  /** Shifts the bits of the first 64-bit unsigned integer right by the second 64-bit unsigned integer. */
+  export function shr_u(left: i64, right: i64): i64;
+  /** Returns true if the 64-bit integer is equal to zero. */
+  export function eqz(value: i64): bool;
   /** Atomic 64-bit integer operations. */
   export namespace atomic {
     /** Atomically loads an 8-bit unsigned integer value from memory and returns it as a 64-bit integer. */

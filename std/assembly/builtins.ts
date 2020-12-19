@@ -137,6 +137,38 @@ export declare function mul<T>(left: T, right: T): T;
 export declare function div<T>(left: T, right: T): T;
 
 // @ts-ignore: decorator
+@builtin
+export declare function rem<T>(left: T, right: T): T;
+
+// @ts-ignore: decorator
+@builtin
+export declare function and<T>(left: T, right: T): T;
+
+// @ts-ignore: decorator
+@builtin
+export declare function or<T>(left: T, right: T): T;
+
+// @ts-ignore: decorator
+@builtin
+export declare function xor<T>(left: T, right: T): T;
+
+// @ts-ignore: decorator
+@builtin
+export declare function shl<T>(left: T, right: T): T;
+
+// @ts-ignore: decorator
+@builtin
+export declare function shr<T>(left: T, right: T): T;
+
+// @ts-ignore: decorator
+@builtin
+export declare function eqz<T>(value: T): bool;
+
+// @ts-ignore: decorator
+@builtin
+export declare function neg<T>(value: T): T;
+
+// @ts-ignore: decorator
 @unsafe @builtin
 export declare function load<T>(ptr: usize, immOffset?: usize, immAlign?: usize): T;
 
@@ -308,23 +340,59 @@ export namespace i32 {
 
   // @ts-ignore: decorator
   @builtin
-  export declare function add(left: i32, right:i32): i32;
+  export declare function add(left: i32, right: i32): i32;
 
   // @ts-ignore: decorator
   @builtin
-  export declare function sub(left: i32, right:i32): i32;
+  export declare function sub(left: i32, right: i32): i32;
 
   // @ts-ignore: decorator
   @builtin
-  export declare function mul(left: i32, right:i32): i32;
+  export declare function mul(left: i32, right: i32): i32;
 
   // @ts-ignore: decorator
   @builtin
-  export declare function div_s(left: i32, right:i32): i32;
+  export declare function div_s(left: i32, right: i32): i32;
 
   // @ts-ignore: decorator
   @builtin
-  export declare function div_u(left: i32, right:i32): i32;
+  export declare function div_u(left: i32, right: i32): i32;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function rem_s(left: i32, right: i32): i32;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function rem_u(left: i32, right: i32): i32;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function and(left: i32, right: i32): i32;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function or(left: i32, right: i32): i32;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function xor(left: i32, right: i32): i32;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function shl(left: i32, right: i32): i32;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function shr_s(left: i32, right: i32): i32;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function shr_u(left: i32, right: i32): i32;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function eqz(value: i32): bool;
 
   // @ts-ignore: decorator
   @builtin
@@ -519,23 +587,59 @@ export namespace i64 {
 
   // @ts-ignore: decorator
   @builtin
-  export declare function add(left: i64, right:i64): i64;
+  export declare function add(left: i64, right: i64): i64;
 
   // @ts-ignore: decorator
   @builtin
-  export declare function sub(left: i64, right:i64): i64;
+  export declare function sub(left: i64, right: i64): i64;
 
   // @ts-ignore: decorator
   @builtin
-  export declare function mul(left: i64, right:i64): i64;
+  export declare function mul(left: i64, right: i64): i64;
 
   // @ts-ignore: decorator
   @builtin
-  export declare function div_s(left: i64, right:i64): i64;
+  export declare function div_s(left: i64, right: i64): i64;
 
   // @ts-ignore: decorator
   @builtin
-  export declare function div_u(left: i64, right:i64): i64;
+  export declare function div_u(left: i64, right: i64): i64;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function rem_s(left: i64, right: i64): i64;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function rem_u(left: i64, right: i64): i64;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function and(left: i64, right: i64): i64;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function or(left: i64, right: i64): i64;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function xor(left: i64, right: i64): i64;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function shl(left: i64, right: i64): i64;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function shr_s(left: i64, right: i64): i64;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function shr_u(left: i64, right: i64): i64;
+    
+  // @ts-ignore: decorator
+  @builtin
+  export declare function eqz(value: i64): bool;
 
   // @ts-ignore: decorator
   @builtin

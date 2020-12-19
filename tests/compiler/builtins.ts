@@ -53,6 +53,16 @@ l = sub<i8>(2, 1); assert(l == 1);
 l = mul<i8>(1, 2); assert(l == 2);
 l = div<i8>(6, 2); assert(l == 3);
 
+b = eqz<i8>(1); assert(b == false);
+b = eqz<i8>(0); assert(b == true);
+
+l = rem<i8>(3, 2); assert(l == 1);
+l = or<i8>(2, 1); assert(l == 3);
+l = and<i8>(2, 2); assert(l == 2);
+l = xor<i8>(2, 1); assert(l == 3);
+l = shl<i8>(1, 1); assert(l == 2);
+l = shr<i8>(2, 1); assert(l == 1);
+
 var v: u8;
 v = rotl<u8>(<u8>0b10001111, 3); assert(v == 0b01111100);
 v = rotr<u8>(<u8>0b10101010, 1); assert(v == 0b01010101);
@@ -86,6 +96,16 @@ i = add<i32>(1, 2); assert(i == 3);
 i = sub<i32>(2, 1); assert(i == 1);
 i = mul<i32>(2, 3); assert(i == 6);
 i = div<i32>(6, 2); assert(i == 3);
+i = rem<i32>(3, 2); assert(i == 1);
+i = or<i32>(2, 1); assert(i == 3);
+i = and<i32>(2, 2); assert(i == 2);
+i = xor<i32>(2, 1); assert(i == 3);
+i = shl<i32>(1, 1); assert(i == 2);
+i = shr<i32>(2, 1); assert(i == 1);
+
+b = eqz<i32>(1); assert(b == false);
+b = eqz<i32>(0); assert(b == true);
+
 var I: i64;
 
 clz<i64>(1);
@@ -107,6 +127,15 @@ I = add<i64>(1, 2); assert(I == 3);
 I = sub<i64>(2, 1); assert(I == 1);
 I = mul<i64>(2, 3); assert(I == 6);
 I = div<i64>(6, 2); assert(I == 3);
+I = rem<i64>(3, 2); assert(I == 1);
+I = or<i64>(2, 1); assert(I == 3);
+I = and<i64>(2, 2); assert(I == 2);
+I = xor<i64>(2, 1); assert(I == 3);
+I = shl<i64>(1, 1); assert(I == 2);
+I = shr<i64>(2, 1); assert(I == 1);
+
+b = eqz<i64>(1); assert(b == false);
+b = eqz<i64>(0); assert(b == true);
 
 // floats
 

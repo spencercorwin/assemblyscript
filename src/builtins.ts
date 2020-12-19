@@ -143,6 +143,13 @@ export namespace BuiltinNames {
   export const sub = "~lib/builtins/sub";
   export const mul = "~lib/builtins/mul";
   export const div = "~lib/builtins/div";
+  export const rem = "~lib/builtins/rem";
+  export const and = "~lib/builtins/and";
+  export const or = "~lib/builtins/or";
+  export const xor = "~lib/builtins/xor";
+  export const shl = "~lib/builtins/shl";
+  export const shr = "~lib/builtins/shr";
+  export const eqz = "~lib/builtins/eqz";
   export const clz = "~lib/builtins/clz";
   export const ctz = "~lib/builtins/ctz";
   export const popcnt = "~lib/builtins/popcnt";
@@ -254,6 +261,24 @@ export namespace BuiltinNames {
   export const i64_div_u = "~lib/builtins/i64.div_u";
   export const f32_div = "~lib/builtins/f32.div";
   export const f64_div = "~lib/builtins/f64.div";
+  export const i32_rem_s = "~lib/builtins/i32.rem_s";
+  export const i32_rem_u = "~lib/builtins/i32.rem_u";
+  export const i64_rem_s = "~lib/builtins/i64.rem_s";
+  export const i64_rem_u = "~lib/builtins/i64.rem_u";
+  export const i32_and = "~lib/builtins/i32.and";
+  export const i64_and = "~lib/builtins/i64.and";
+  export const i32_or = "~lib/builtins/i32.or";
+  export const i64_or = "~lib/builtins/i64.or";
+  export const i32_xor = "~lib/builtins/i32.xor";
+  export const i64_xor = "~lib/builtins/i64.xor";
+  export const i32_shl = "~lib/builtins/i32.shl";
+  export const i64_shl = "~lib/builtins/i64.shl";
+  export const i32_shr_s = "~lib/builtins/i32.shr_s";
+  export const i32_shr_u = "~lib/builtins/i32.shr_u";
+  export const i64_shr_s = "~lib/builtins/i64.shr_s";
+  export const i64_shr_u = "~lib/builtins/i64.shr_u";
+  export const i32_eqz = "~lib/builtins/i32.eqz";
+  export const i64_eqz = "~lib/builtins/i64.eqz";
 
   export const i32_load8_s = "~lib/builtins/i32.load8_s";
   export const i32_load8_u = "~lib/builtins/i32.load8_u";
@@ -2351,6 +2376,374 @@ function builtin_div(ctx: BuiltinContext): ExpressionRef {
   return module.unreachable();
 }
 builtins.set(BuiltinNames.div, builtin_div);
+
+// rem<T?>(left: T, right: T) -> T
+function builtin_rem(ctx: BuiltinContext): ExpressionRef {
+  var compiler = ctx.compiler;
+  var module = compiler.module;
+  if (checkTypeOptional(ctx, true) | checkArgsRequired(ctx, 2)) {
+    return module.unreachable();
+  }
+  var operands = ctx.operands;
+  var typeArguments = ctx.typeArguments;
+  var left = operands[0];
+  var arg0 = typeArguments
+    ? compiler.compileExpression(
+        left,
+        typeArguments[0],
+        Constraints.CONV_IMPLICIT
+      )
+    : compiler.compileExpression(operands[0], Type.auto);
+  var type = compiler.currentType;
+  if (type.isValue) {
+    let arg1: ExpressionRef;
+    if (!typeArguments && left.isNumericLiteral) {
+      // prefer right type
+      arg1 = compiler.compileExpression(
+        operands[1],
+        type
+      );
+      if (compiler.currentType != type) {
+        arg0 = compiler.compileExpression(
+          left,
+          (type = compiler.currentType),
+          Constraints.CONV_IMPLICIT
+        );
+      }
+    } else {
+      arg1 = compiler.compileExpression(
+        operands[1],
+        type,
+        Constraints.CONV_IMPLICIT
+      );
+    }
+    if (type.isNumericValue) {
+      return compiler.makeRem(arg0, arg1, type, ctx.reportNode);
+    }
+  }
+  compiler.error(
+    DiagnosticCode.Operation_0_cannot_be_applied_to_type_1,
+    ctx.reportNode.typeArgumentsRange,
+    "rem",
+    type.toString()
+  );
+  return module.unreachable();
+}
+builtins.set(BuiltinNames.rem, builtin_rem);
+
+// and<T?>(left: T, right: T) -> T
+function builtin_and(ctx: BuiltinContext): ExpressionRef {
+  var compiler = ctx.compiler;
+  var module = compiler.module;
+  if (checkTypeOptional(ctx, true) | checkArgsRequired(ctx, 2)) {
+    return module.unreachable();
+  }
+  var operands = ctx.operands;
+  var typeArguments = ctx.typeArguments;
+  var left = operands[0];
+  var arg0 = typeArguments
+    ? compiler.compileExpression(
+        left,
+        typeArguments[0],
+        Constraints.CONV_IMPLICIT
+      )
+    : compiler.compileExpression(operands[0], Type.auto);
+  var type = compiler.currentType;
+  if (type.isValue) {
+    let arg1: ExpressionRef;
+    if (!typeArguments && left.isNumericLiteral) {
+      // prefer right type
+      arg1 = compiler.compileExpression(
+        operands[1],
+        type
+      );
+      if (compiler.currentType != type) {
+        arg0 = compiler.compileExpression(
+          left,
+          (type = compiler.currentType),
+          Constraints.CONV_IMPLICIT
+        );
+      }
+    } else {
+      arg1 = compiler.compileExpression(
+        operands[1],
+        type,
+        Constraints.CONV_IMPLICIT
+      );
+    }
+    if (type.isNumericValue) {
+      return compiler.makeAnd(arg0, arg1, type);
+    }
+  }
+  compiler.error(
+    DiagnosticCode.Operation_0_cannot_be_applied_to_type_1,
+    ctx.reportNode.typeArgumentsRange,
+    "and",
+    type.toString()
+  );
+  return module.unreachable();
+}
+builtins.set(BuiltinNames.and, builtin_and);
+
+// or<T?>(left: T, right: T) -> T
+function builtin_or(ctx: BuiltinContext): ExpressionRef {
+  var compiler = ctx.compiler;
+  var module = compiler.module;
+  if (checkTypeOptional(ctx, true) | checkArgsRequired(ctx, 2)) {
+    return module.unreachable();
+  }
+  var operands = ctx.operands;
+  var typeArguments = ctx.typeArguments;
+  var left = operands[0];
+  var arg0 = typeArguments
+    ? compiler.compileExpression(
+        left,
+        typeArguments[0],
+        Constraints.CONV_IMPLICIT
+      )
+    : compiler.compileExpression(operands[0], Type.auto);
+  var type = compiler.currentType;
+  if (type.isValue) {
+    let arg1: ExpressionRef;
+    if (!typeArguments && left.isNumericLiteral) {
+      // prefer right type
+      arg1 = compiler.compileExpression(
+        operands[1],
+        type
+      );
+      if (compiler.currentType != type) {
+        arg0 = compiler.compileExpression(
+          left,
+          (type = compiler.currentType),
+          Constraints.CONV_IMPLICIT
+        );
+      }
+    } else {
+      arg1 = compiler.compileExpression(
+        operands[1],
+        type,
+        Constraints.CONV_IMPLICIT
+      );
+    }
+    if (type.isNumericValue) {
+      return compiler.makeOr(arg0, arg1, type);
+    }
+  }
+  compiler.error(
+    DiagnosticCode.Operation_0_cannot_be_applied_to_type_1,
+    ctx.reportNode.typeArgumentsRange,
+    "or",
+    type.toString()
+  );
+  return module.unreachable();
+}
+builtins.set(BuiltinNames.or, builtin_or);
+
+// xor<T?>(left: T, right: T) -> T
+function builtin_xor(ctx: BuiltinContext): ExpressionRef {
+  var compiler = ctx.compiler;
+  var module = compiler.module;
+  if (checkTypeOptional(ctx, true) | checkArgsRequired(ctx, 2)) {
+    return module.unreachable();
+  }
+  var operands = ctx.operands;
+  var typeArguments = ctx.typeArguments;
+  var left = operands[0];
+  var arg0 = typeArguments
+    ? compiler.compileExpression(
+        left,
+        typeArguments[0],
+        Constraints.CONV_IMPLICIT
+      )
+    : compiler.compileExpression(operands[0], Type.auto);
+  var type = compiler.currentType;
+  if (type.isValue) {
+    let arg1: ExpressionRef;
+    if (!typeArguments && left.isNumericLiteral) {
+      // prefer right type
+      arg1 = compiler.compileExpression(
+        operands[1],
+        type
+      );
+      if (compiler.currentType != type) {
+        arg0 = compiler.compileExpression(
+          left,
+          (type = compiler.currentType),
+          Constraints.CONV_IMPLICIT
+        );
+      }
+    } else {
+      arg1 = compiler.compileExpression(
+        operands[1],
+        type,
+        Constraints.CONV_IMPLICIT
+      );
+    }
+    if (type.isNumericValue) {
+      return compiler.makeXor(arg0, arg1, type);
+    }
+  }
+  compiler.error(
+    DiagnosticCode.Operation_0_cannot_be_applied_to_type_1,
+    ctx.reportNode.typeArgumentsRange,
+    "xor",
+    type.toString()
+  );
+  return module.unreachable();
+}
+builtins.set(BuiltinNames.xor, builtin_xor);
+
+// shl<T?>(left: T, right: T) -> T
+function builtin_shl(ctx: BuiltinContext): ExpressionRef {
+  var compiler = ctx.compiler;
+  var module = compiler.module;
+  if (checkTypeOptional(ctx, true) | checkArgsRequired(ctx, 2)) {
+    return module.unreachable();
+  }
+  var operands = ctx.operands;
+  var typeArguments = ctx.typeArguments;
+  var left = operands[0];
+  var arg0 = typeArguments
+    ? compiler.compileExpression(
+        left,
+        typeArguments[0],
+        Constraints.CONV_IMPLICIT
+      )
+    : compiler.compileExpression(operands[0], Type.auto);
+  var type = compiler.currentType;
+  if (type.isValue) {
+    let arg1: ExpressionRef;
+    if (!typeArguments && left.isNumericLiteral) {
+      // prefer right type
+      arg1 = compiler.compileExpression(
+        operands[1],
+        type
+      );
+      if (compiler.currentType != type) {
+        arg0 = compiler.compileExpression(
+          left,
+          (type = compiler.currentType),
+          Constraints.CONV_IMPLICIT
+        );
+      }
+    } else {
+      arg1 = compiler.compileExpression(
+        operands[1],
+        type,
+        Constraints.CONV_IMPLICIT
+      );
+    }
+    if (type.isNumericValue) {
+      return compiler.makeShl(arg0, arg1, type);
+    }
+  }
+  compiler.error(
+    DiagnosticCode.Operation_0_cannot_be_applied_to_type_1,
+    ctx.reportNode.typeArgumentsRange,
+    "shl",
+    type.toString()
+  );
+  return module.unreachable();
+}
+builtins.set(BuiltinNames.shl, builtin_shl);
+
+// shr<T?>(left: T, right: T) -> T
+function builtin_shr(ctx: BuiltinContext): ExpressionRef {
+  var compiler = ctx.compiler;
+  var module = compiler.module;
+  if (checkTypeOptional(ctx, true) | checkArgsRequired(ctx, 2)) {
+    return module.unreachable();
+  }
+  var operands = ctx.operands;
+  var typeArguments = ctx.typeArguments;
+  var left = operands[0];
+  var arg0 = typeArguments
+    ? compiler.compileExpression(
+        left,
+        typeArguments[0],
+        Constraints.CONV_IMPLICIT
+      )
+    : compiler.compileExpression(operands[0], Type.auto);
+  var type = compiler.currentType;
+  if (type.isValue) {
+    let arg1: ExpressionRef;
+    if (!typeArguments && left.isNumericLiteral) {
+      // prefer right type
+      arg1 = compiler.compileExpression(
+        operands[1],
+        type
+      );
+      if (compiler.currentType != type) {
+        arg0 = compiler.compileExpression(
+          left,
+          (type = compiler.currentType),
+          Constraints.CONV_IMPLICIT
+        );
+      }
+    } else {
+      arg1 = compiler.compileExpression(
+        operands[1],
+        type,
+        Constraints.CONV_IMPLICIT
+      );
+    }
+    if (type.isNumericValue) {
+      return compiler.makeShr(arg0, arg1, type);
+    }
+  }
+  compiler.error(
+    DiagnosticCode.Operation_0_cannot_be_applied_to_type_1,
+    ctx.reportNode.typeArgumentsRange,
+    "shr",
+    type.toString()
+  );
+  return module.unreachable();
+}
+builtins.set(BuiltinNames.shr, builtin_shr);
+
+// eqz<T?>(value: T) -> bool
+function builtin_eqz(ctx: BuiltinContext): ExpressionRef {
+  var compiler = ctx.compiler;
+  var module = compiler.module;
+  if (checkTypeOptional(ctx, true) | checkArgsRequired(ctx, 1)) {
+    compiler.currentType = Type.bool;
+    return module.unreachable();
+  }
+  var operands = ctx.operands;
+  var typeArguments = ctx.typeArguments;
+  var left = operands[0];
+  var arg0 = typeArguments
+    ? compiler.compileExpression(
+        left,
+        typeArguments[0],
+        Constraints.CONV_IMPLICIT
+      )
+    : compiler.compileExpression(operands[0], Type.auto);
+  var type = compiler.currentType;
+  compiler.currentType = Type.bool;
+  if (type.isValue) {
+    if (!typeArguments && left.isNumericLiteral) {
+      if (compiler.currentType != type) {
+        arg0 = compiler.compileExpression(
+          left,
+          (type = compiler.currentType),
+          Constraints.CONV_IMPLICIT
+        );
+      }
+    }
+    if (type.isNumericValue) {
+      return compiler.makeEqz(arg0, type);
+    }
+  }
+  compiler.error(
+    DiagnosticCode.Operation_0_cannot_be_applied_to_type_1,
+    ctx.reportNode.typeArgumentsRange,
+    "eqz",
+    type.toString()
+  );
+  return module.unreachable();
+}
+builtins.set(BuiltinNames.eqz, builtin_eqz);
 
 // === Atomics ================================================================================
 
@@ -6024,6 +6417,168 @@ function builtin_f64_div(ctx: BuiltinContext): ExpressionRef {
   return builtin_div(ctx);
 }
 builtins.set(BuiltinNames.f64_div, builtin_f64_div);
+
+// i32.rem_s -> rem<i32>
+function builtin_i32_rem_s(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.i32 ];
+  ctx.contextualType = Type.i32;
+  return builtin_rem(ctx);
+}
+builtins.set(BuiltinNames.i32_rem_s, builtin_i32_rem_s);
+
+// i32.rem_u -> rem<u32>
+function builtin_i32_rem_u(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.u32 ];
+  ctx.contextualType = Type.u32;
+  return builtin_rem(ctx);
+}
+builtins.set(BuiltinNames.i32_rem_u, builtin_i32_rem_u);
+
+// i64.rem_s -> rem_s<i64>
+function builtin_i64_rem_s(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.i64 ];
+  ctx.contextualType = Type.i64;
+  return builtin_rem(ctx);
+}
+builtins.set(BuiltinNames.i64_rem_s, builtin_i64_rem_s);
+
+// i64.rem_u -> rem_u<u64>
+function builtin_i64_rem_u(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.u64 ];
+  ctx.contextualType = Type.u64;
+  return builtin_rem(ctx);
+}
+builtins.set(BuiltinNames.i64_rem_u, builtin_i64_rem_u);
+
+// i32.and -> and<i32>
+function builtin_i32_and(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.i32 ];
+  ctx.contextualType = Type.i32;
+  return builtin_and(ctx);
+}
+builtins.set(BuiltinNames.i32_and, builtin_i32_and);
+
+// i64.and -> and<i64>
+function builtin_i64_and(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.i64 ];
+  ctx.contextualType = Type.i64;
+  return builtin_and(ctx);
+}
+builtins.set(BuiltinNames.i64_and, builtin_i64_and);
+
+// i32.or -> or<i32>
+function builtin_i32_or(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.i32 ];
+  ctx.contextualType = Type.i32;
+  return builtin_or(ctx);
+}
+builtins.set(BuiltinNames.i32_or, builtin_i32_or);
+
+// i64.or -> or<i64>
+function builtin_i64_or(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.i64 ];
+  ctx.contextualType = Type.i64;
+  return builtin_or(ctx);
+}
+builtins.set(BuiltinNames.i64_or, builtin_i64_or);
+
+// i32.xor -> xor<i32>
+function builtin_i32_xor(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.i32 ];
+  ctx.contextualType = Type.i32;
+  return builtin_xor(ctx);
+}
+builtins.set(BuiltinNames.i32_xor, builtin_i32_xor);
+
+// i64.xor -> xor<i64>
+function builtin_i64_xor(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.i64 ];
+  ctx.contextualType = Type.i64;
+  return builtin_xor(ctx);
+}
+builtins.set(BuiltinNames.i64_xor, builtin_i64_xor);
+
+// i32.shl -> shl<i32>
+function builtin_i32_shl(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.i32 ];
+  ctx.contextualType = Type.i32;
+  return builtin_shl(ctx);
+}
+builtins.set(BuiltinNames.i32_shl, builtin_i32_shl);
+
+// i64.shl -> shl<i64>
+function builtin_i64_shl(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.i64 ];
+  ctx.contextualType = Type.i64;
+  return builtin_shl(ctx);
+}
+builtins.set(BuiltinNames.i64_shl, builtin_i64_shl);
+
+// i32.shr_s -> shr<i32>
+function builtin_i32_shr_s(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.i32 ];
+  ctx.contextualType = Type.i32;
+  return builtin_shr(ctx);
+}
+builtins.set(BuiltinNames.i32_shr_s, builtin_i32_shr_s);
+
+// i32.shr_u -> shr<u32>
+function builtin_i32_shr_u(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.u32 ];
+  ctx.contextualType = Type.u32;
+  return builtin_shr(ctx);
+}
+builtins.set(BuiltinNames.i32_shr_u, builtin_i32_shr_u);
+
+// i64.shr_s -> shr_s<i64>
+function builtin_i64_shr_s(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.i64 ];
+  ctx.contextualType = Type.i64;
+  return builtin_shr(ctx);
+}
+builtins.set(BuiltinNames.i64_shr_s, builtin_i64_shr_s);
+
+// i64.shr_u -> shr_u<u64>
+function builtin_i64_shr_u(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.u64 ];
+  ctx.contextualType = Type.u64;
+  return builtin_shr(ctx);
+}
+builtins.set(BuiltinNames.i64_shr_u, builtin_i64_shr_u);
+
+// i32.eqz -> eqz<i32>
+function builtin_i32_eqz(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.i32 ];
+  ctx.contextualType = Type.i32;
+  return builtin_eqz(ctx);
+}
+builtins.set(BuiltinNames.i32_eqz, builtin_i32_eqz);
+
+// i64.eqz -> eqz<i64>
+function builtin_i64_eqz(ctx: BuiltinContext): ExpressionRef {
+  checkTypeAbsent(ctx);
+  ctx.typeArguments = [ Type.i64 ];
+  ctx.contextualType = Type.i64;
+  return builtin_eqz(ctx);
+}
+builtins.set(BuiltinNames.i64_eqz, builtin_i64_eqz);
 
 // i32.load8_s -> <i32>load<i8>
 function builtin_i32_load8_s(ctx: BuiltinContext): ExpressionRef {
